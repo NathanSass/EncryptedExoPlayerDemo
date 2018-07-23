@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playVideo();
+                playMp3();
             }
         });
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playVideo() {
+    public void playMp3() {
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
