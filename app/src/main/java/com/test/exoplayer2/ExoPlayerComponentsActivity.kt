@@ -59,12 +59,22 @@ class ExoPlayerComponentsActivity : AppCompatActivity() {
 
     private fun createMediaSource(url: String) = ExtractorMediaSource(Uri.parse(url), cacheDataSourceFactory(), DefaultExtractorsFactory(), null, null)
 
-    private fun cacheDataSourceFactory() = DataSource.Factory {
-        val secret = generateSecret("password")
-        val aesCipherDataSource = AesCipherDataSource(secret, FileDataSource())
-        val scratch = ByteArray(3897)
-        val aesCipherDataSink = AesCipherDataSink(secret, CacheDataSink(cache, Long.MAX_VALUE), scratch)
-        CacheDataSource(cache, okHttpDataSourceFactory().createDataSource(), aesCipherDataSource, aesCipherDataSink, CacheDataSource.FLAG_BLOCK_ON_CACHE, null)
+    private fun cacheDataSourceFactory() = object : DataSource.Factory {
+        override fun createDataSource(): DataSource {
+            val secret = generateSecret("password")
+            val aesCipherDataSource = AesCipherDataSource(secret, FileDataSource())
+            val scratch = ByteArray(3897)
+            val aesCipherDataSink = AesCipherDataSink(
+                    secret, CacheDataSink(cache, Long.MAX_VALUE), scratch)
+
+            return CacheDataSource(
+                    cache,
+                    okHttpDataSourceFactory().createDataSource(),
+                    aesCipherDataSource,
+                    aesCipherDataSink,
+                    CacheDataSource.FLAG_BLOCK_ON_CACHE, null)
+
+        }
     }
 
     private fun okHttpDataSourceFactory() = DefaultHttpDataSourceFactory(Util.getUserAgent(applicationContext, packageName), null)
