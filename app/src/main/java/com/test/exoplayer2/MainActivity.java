@@ -123,13 +123,14 @@ public class MainActivity extends AppCompatActivity {
         LoadControl loadControl = new DefaultLoadControl();
         RenderersFactory renderersFactory = new DefaultRenderersFactory(this);
         SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
+
         DataSource.Factory dataSourceFactory =
                 new EncryptedFileDataSourceFactory(mCipher, mSecretKeySpec, mIvParameterSpec, bandwidthMeter);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         try {
             Uri uri = Uri.fromFile(mEncryptedFile);
-            MediaSource videoSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
-            player.prepare(videoSource);
+            MediaSource mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+            player.prepare(mediaSource);
             player.setPlayWhenReady(true);
         } catch (Exception e) {
             e.printStackTrace();
