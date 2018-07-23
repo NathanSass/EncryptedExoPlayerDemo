@@ -127,9 +127,12 @@ public class MainActivity extends AppCompatActivity {
         DataSource.Factory dataSourceFactory =
                 new EncryptedFileDataSourceFactory(mCipher, mSecretKeySpec, mIvParameterSpec, bandwidthMeter);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
         try {
             Uri uri = Uri.fromFile(mEncryptedFile);
-            MediaSource mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+            ExtractorMediaSource.Factory mediaSourceFactory = new ExtractorMediaSource.Factory(dataSourceFactory);
+            mediaSourceFactory.setExtractorsFactory(extractorsFactory);
+            MediaSource mediaSource = mediaSourceFactory.createMediaSource(uri);
             player.prepare(mediaSource);
             player.setPlayWhenReady(true);
         } catch (Exception e) {
