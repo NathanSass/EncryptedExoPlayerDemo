@@ -7,29 +7,17 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin"
-    tools:context="com.test.exoplayer2.MainActivity">
+    tools:context="com.test.exoplayer2.ExoPlayerComponentsActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Custom Encryption/Decryption"
+        android:text="Exoplayer Components Page"
         android:textColor="@android:color/black"/>
-
-    <Button
-        android:id="@+id/encryptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Encrypt Mp3"/>
 
     <Button
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play Mp3"/>
-
-    <Button
-        android:id="@+id/gotoExoplayerComponents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to exoplayer components"/>
 </LinearLayout>

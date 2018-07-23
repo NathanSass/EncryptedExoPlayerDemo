@@ -1,5 +1,6 @@
 package com.test.exoplayer2;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,15 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String AES_ALGORITHM = "AES";
     public static final String AES_TRANSFORMATION = "AES/CTR/NoPadding";
+//    public static final String AES_TRANSFORMATION = "AES/GCM/NoPadding";
+//    public static final String AES_TRANSFORMATION = "AES/CFB8/NoPadding";
 
     private static final String ENCRYPTED_FILE_NAME = "encrypted.mp4";
 
     private Cipher mCipher;
     private SecretKeySpec mSecretKeySpec;
     private IvParameterSpec mIvParameterSpec;
-
-    private Button playButton;
-    private Button encryptButton;
+    private byte[] key;
 
 
     private File mEncryptedFile;
@@ -53,19 +54,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        playButton = findViewById(R.id.playButton);
-        encryptButton = findViewById(R.id.encryptButton);
+        Button playButton = findViewById(R.id.playButton);
+        Button encryptButton = findViewById(R.id.encryptButton);
+        Button componentsNavigationButton = findViewById(R.id.gotoExoplayerComponents);
 
         mEncryptedFile = new File(getFilesDir(), ENCRYPTED_FILE_NAME);
 
         SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[16];
-        byte[] iv = new byte[16];
+        key = new byte[16];
+//        byte[] iv = new byte[16];
         secureRandom.nextBytes(key);
-        secureRandom.nextBytes(iv);
+//        secureRandom.nextBytes(iv);
 
         mSecretKeySpec = new SecretKeySpec(key, AES_ALGORITHM);
-        mIvParameterSpec = new IvParameterSpec(iv);
+        mIvParameterSpec = new IvParameterSpec(key);
 
         try {
             mCipher = Cipher.getInstance(AES_TRANSFORMATION);
@@ -84,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
         encryptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                encryptVideo();
+                encryptMedia();
+            }
+        });
+
+        componentsNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, ExoPlayerComponentsActivity.class);
+                startActivity(i);
             }
         });
 
@@ -96,11 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 && mEncryptedFile.length() > 0;
     }
 
-    public void encryptVideo() {
-//        if (hasFile()) {
-//            Log.d(getClass().getCanonicalName(), "encrypted file found, no need to recreate");
-//            return;
-//        }
+    public void encryptMedia() {
         try {
             Cipher encryptionCipher = Cipher.getInstance(AES_TRANSFORMATION);
             encryptionCipher.init(Cipher.ENCRYPT_MODE, mSecretKeySpec, mIvParameterSpec);
@@ -118,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void playMp3() {
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
         LoadControl loadControl = new DefaultLoadControl();
         RenderersFactory renderersFactory = new DefaultRenderersFactory(this);
         SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
