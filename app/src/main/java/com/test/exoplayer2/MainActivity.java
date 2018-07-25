@@ -34,9 +34,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class MainActivity extends AppCompatActivity {
 
     public static final String AES_ALGORITHM = "AES";
-    public static final String AES_TRANSFORMATION = "AES/CTR/NoPadding";
+//    public static final String AES_TRANSFORMATION = "AES/CTR/NoPadding";
 //    public static final String AES_TRANSFORMATION = "AES/GCM/NoPadding";
-//    public static final String AES_TRANSFORMATION = "AES/CFB8/NoPadding";
+    public static final String AES_TRANSFORMATION = "AES/CFB8/NoPadding";
 
     private static final String ENCRYPTED_FILE_NAME = "encrypted.mp4";
 
@@ -62,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         SecureRandom secureRandom = new SecureRandom();
         key = new byte[16];
-//        byte[] iv = new byte[16];
         secureRandom.nextBytes(key);
-//        secureRandom.nextBytes(iv);
 
         mSecretKeySpec = new SecretKeySpec(key, AES_ALGORITHM);
         mIvParameterSpec = new IvParameterSpec(key);
